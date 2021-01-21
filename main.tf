@@ -1,3 +1,8 @@
+
+locals {
+  lambda_name = "${var.name}_lambda"
+}
+
 ###########################
 resource "aws_dynamodb_table" "data_set" {
   name           = "${var.name}_data_set"
@@ -89,4 +94,27 @@ data "aws_iam_policy_document" "s3" {
       "${aws_s3_bucket.data_source.arn}/*"
     ]
   }
+}
+
+## Allow lambda call
+resource "aws_lambda_permission" "allow_bucket" {
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = local.lambda_name 
+  # aws_lambda_function.func.arn
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.data_source.arn
+}
+
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.data_source.id
+
+  lambda_function {
+    lambda_function_arn = local.lambda_name
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = "AWSLogs/"
+    filter_suffix       = ".log"
+  }
+
+  depends_on = [aws_lambda_permission.allow_bucket]
 }
