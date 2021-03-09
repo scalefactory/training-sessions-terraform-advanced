@@ -11,10 +11,6 @@ resource aws_dynamodb_table data_set {
   }
 }
 
-resource aws_s3_bucket data_source {
-  bucket = "${var.name}-data-source"
-}
-
 # Create role for Lambda
 resource aws_iam_role lambda_role {
   name               = "${var.name}_lambda_role"
@@ -59,22 +55,4 @@ resource aws_lambda_permission allow_bucket {
   # aws_lambda_function.func.arn
   principal     = "s3.amazonaws.com"
   source_arn    = aws_s3_bucket.data_source.arn
-}
-
-resource aws_s3_bucket_notification bucket_notification {
-  bucket = aws_s3_bucket.data_source.id
-
-  lambda_function {
-    lambda_function_arn = local.lambda_name
-    filter_prefix       = "AWSLogs/"
-    filter_suffix       = ".log"
-
-    events = [
-      "s3:ObjectCreated:*",
-    ]
-  }
-
-  depends_on = [
-    aws_lambda_permission.allow_bucket,
-  ]
 }
