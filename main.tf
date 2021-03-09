@@ -19,27 +19,6 @@ resource aws_s3_bucket data_source {
   bucket = "${var.name}-data-source"
 }
 
-# Create policy
-
-# Create role
-data aws_iam_policy_document lambda_assume_role_policy {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type = "Service"
-
-      identifiers = [
-        "lambda.amazonaws.com",
-      ]
-    }
-  }
-}
-
 # Create role for Lambda
 resource aws_iam_role lambda_role {
   name               = "${var.name}_lambda_role"
@@ -64,25 +43,6 @@ resource aws_iam_policy dynamodb_policy {
   policy = data.aws_iam_policy_document.dynamodb.json
 }
 
-data aws_iam_policy_document dynamodb {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "dynamodb:BatchGet*",
-      "dynamodb:DescribeStream",
-      "dynamodb:DescribeTable",
-      "dynamodb:Get*",
-      "dynamodb:Query",
-      "dynamodb:Scan",
-    ]
-
-    resources = [
-      aws_dynamodb_table.data_set.arn,
-    ]
-  }
-}
-
 # Attach S3 Policy
 resource aws_iam_role_policy_attachment LambdaS3 {
   role       = aws_iam_role.lambda_role.name
@@ -93,20 +53,6 @@ resource aws_iam_role_policy_attachment LambdaS3 {
 resource aws_iam_policy s3_policy {
   path   = "/"
   policy = data.aws_iam_policy_document.s3.json
-}
-
-data aws_iam_policy_document s3 {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "s3:*Object",
-    ]
-
-    resources = [
-      "${aws_s3_bucket.data_source.arn}/*",
-    ]
-  }
 }
 
 ## Allow lambda call
