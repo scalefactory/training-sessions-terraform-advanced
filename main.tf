@@ -1,7 +1,3 @@
-locals {
-  lambda_name = "${var.name}_lambda"
-}
-
 ###########################
 resource aws_dynamodb_table data_set {
   name           = "${var.name}_data_set"
