@@ -1,4 +1,5 @@
 variable name {
-  type    = string
-  default = "user"
+  description = "Name given to the Lambda"
+  type        = string
+  default     = "user"
 }
