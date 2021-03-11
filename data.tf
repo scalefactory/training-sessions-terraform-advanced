@@ -44,12 +44,18 @@ data aws_iam_policy_document dynamodb {
   }
 }
 
+# Policy allowing access to S3
 data aws_iam_policy_document s3 {
   statement {
     effect = "Allow"
 
     actions = [
-      "s3:*Object",
+      "s3:CopyObject",
+      "s3:DeleteObject",
+      "s3:GetObject",
+      "s3:HeadObject",
+      "s3:PutObject",
+      "s3:RestoreObject",
     ]
 
     resources = [
