@@ -1,4 +1,11 @@
-# Create role
+# Prepare a zip file for deployment to AWS Lambda
+data archive_file updater {
+  type        = "zip"
+  source_file = "${path.module}/lambda/updater.py"
+  output_path = "${path.module}/lambda/updater.zip"
+}
+
+# Assume role policy for Lambda
 data aws_iam_policy_document lambda_assume_role_policy {
   statement {
     effect = "Allow"
@@ -17,6 +24,7 @@ data aws_iam_policy_document lambda_assume_role_policy {
   }
 }
 
+# Policy allowing access to DynamoDB for Lambda
 data aws_iam_policy_document dynamodb {
   statement {
     effect = "Allow"
