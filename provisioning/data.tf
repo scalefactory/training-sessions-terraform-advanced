@@ -2,6 +2,35 @@
 data aws_caller_identity current {}
 data aws_region current {}
 
+# Managed policy ARNs
+data aws_arn read_only_access_policy {
+  arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
+
+# Account ARN
+data aws_arn current_account {
+  arn = "arn:aws:iam::${local.account_id}:root"
+}
+
+# Generic role assumption policy
+data aws_iam_policy_document assume_role {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type = "AWS"
+
+      identifiers = [
+        data.aws_arn.current_account.arn,
+      ]
+    }
+  }
+}
+
 # LambdaAdmin
 data aws_iam_policy_document lambda_admin {
   statement {
