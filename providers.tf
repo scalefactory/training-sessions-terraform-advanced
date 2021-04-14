@@ -15,7 +15,10 @@
 #
 # Where 123456789012 is your real account ID.
 provider aws {
-  region                  = "eu-west-1"
+  region = "eu-west-1"
+
+  # This profile configuration will be overridden if using aws-vault, so it's
+  # safe to stay here.
   profile                 = "tf_adv_training"
   shared_credentials_file = "credentials"
 }
