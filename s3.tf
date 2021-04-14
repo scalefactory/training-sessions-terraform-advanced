@@ -1,6 +1,6 @@
 ###########################
 resource aws_s3_bucket data_source {
-  bucket = "${var.name}-data-source"
+  bucket = "${var.name}-data-source-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
 }
 
 resource aws_s3_bucket_notification bucket_notification {

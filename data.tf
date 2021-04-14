@@ -1,3 +1,9 @@
+# Get our current region
+data aws_region current {}
+
+# Get our caller identity
+data aws_caller_identity current {}
+
 # Prepare a zip file for deployment to AWS Lambda
 data archive_file updater {
   type        = "zip"
