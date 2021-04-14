@@ -37,6 +37,27 @@ data aws_iam_policy_document lambda_admin {
     effect = "Allow"
 
     actions = [
+      "iam:PassRole",
+    ]
+
+    resources = [
+      "*",
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+
+      values = [
+        "lambda.amazonaws.com",
+      ]
+    }
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
       "lambda:AddLayerVersionPermission",
       "lambda:AddPermission",
       "lambda:CreateAlias",
