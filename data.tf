@@ -1,8 +1,12 @@
 # Get our current region
-data aws_region current {}
+data aws_region current {
+  provider = aws.read_only
+}
 
 # Get our caller identity
-data aws_caller_identity current {}
+data aws_caller_identity current {
+  provider = aws.read_only
+}
 
 # Prepare a zip file for deployment to AWS Lambda
 data archive_file updater {
