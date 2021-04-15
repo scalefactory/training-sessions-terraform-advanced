@@ -7,7 +7,6 @@ from botocore.exceptions import ClientError
 # Pull configuration out of the environment
 BUCKET_NAME = os.environ['s3_bucket']
 DYNAMODB_TABLE = os.environ['dynamodb_table']
-DYNAMODB_URL = os.environ['dynamodb_url']
 SOURCE_KEYS = os.environ['keys'].split(",")
 TMP_FILE = '/tmp/source.json'
 
@@ -16,12 +15,16 @@ def handler(event, context):
     """
     Handle incoming S3 notification events
     """
-    key = event['s3_object']
+    print("Incoming event: ", event)
+
+    key = event['Records'][0]['s3']['object']['key']
+
+    print("Object key: ", key)
 
     # Download file
-    s3_client = boto3.client('s3')
+    s3 = boto3.client('s3')
     try:
-        s3_client.download_file(BUCKET_NAME, key, TMP_FILE)
+        s3.download_file(BUCKET_NAME, key, TMP_FILE)
     except ClientError as e:
         if e.response['Error']['Code'] == '404':
             print('The object does not exist.')
@@ -29,7 +32,7 @@ def handler(event, context):
             raise
 
     # Parse file
-    dynamodb = boto3.resource('dynamodb', endpoint_url=DYNAMODB_URL)
+    dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(DYNAMODB_TABLE)
 
     print("Processing:", TMP_FILE)
@@ -46,6 +49,8 @@ def handler(event, context):
                 in entry.items()
                 if key in SOURCE_KEYS
             }
+
+            print("Inserting item into DynamoDB: ", item)
 
             # put_item returns a response here, but we ignore it.
             table.put_item(
