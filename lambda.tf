@@ -5,13 +5,15 @@ resource aws_lambda_function updater {
   filename         = data.archive_file.updater.output_path
   function_name    = local.lambda_name
   role             = aws_iam_role.lambda_role.arn
-  handler          = "handler"
+  handler          = "updater.handler"
   runtime          = "python3.8"
   source_code_hash = filebase64sha256(data.archive_file.updater.output_path)
 
   environment {
     variables = {
-      keys = "name"
+      dynamodb_table = aws_dynamodb_table.data_set.name
+      keys           = "name"
+      s3_bucket      = aws_s3_bucket.data_source.bucket
     }
   }
 }
