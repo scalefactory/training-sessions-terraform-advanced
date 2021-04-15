@@ -44,6 +44,7 @@ data aws_iam_policy_document dynamodb {
       "dynamodb:DescribeStream",
       "dynamodb:DescribeTable",
       "dynamodb:Get*",
+      "dynamodb:PutItem",
       "dynamodb:Query",
       "dynamodb:Scan",
     ]
