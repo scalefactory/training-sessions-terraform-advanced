@@ -8,6 +8,7 @@ resource aws_lambda_function updater {
   handler          = "updater.handler"
   runtime          = "python3.8"
   source_code_hash = filebase64sha256(data.archive_file.updater.output_path)
+  timeout          = 30
 
   environment {
     variables = {
