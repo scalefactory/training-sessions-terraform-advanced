@@ -41,6 +41,7 @@ data aws_iam_policy_document dynamodb {
 
     actions = [
       "dynamodb:BatchGet*",
+      "dynamodb:BatchWriteItem",
       "dynamodb:DescribeStream",
       "dynamodb:DescribeTable",
       "dynamodb:Get*",
