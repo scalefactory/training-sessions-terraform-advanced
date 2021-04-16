@@ -2,13 +2,13 @@
 import boto3
 import json
 import os
+import tempfile
 from botocore.exceptions import ClientError
 
 # Pull configuration out of the environment
 BUCKET_NAME = os.environ['s3_bucket']
 DYNAMODB_TABLE = os.environ['dynamodb_table']
 SOURCE_KEYS = os.environ['keys'].split(",")
-TMP_FILE = '/tmp/source.json'
 
 
 def handler(event, context):
@@ -23,8 +23,11 @@ def handler(event, context):
 
     # Download file
     s3 = boto3.client('s3')
+    tmpfile = tempfile.NamedTemporaryFile(delete=False)
+
     try:
-        s3.download_file(BUCKET_NAME, key, TMP_FILE)
+        s3.download_fileobj(BUCKET_NAME, key, tmpfile)
+        tmpfile.close()
     except ClientError as e:
         if e.response['Error']['Code'] == '404':
             print('The object does not exist.')
@@ -35,14 +38,16 @@ def handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(DYNAMODB_TABLE)
 
-    print("Processing:", TMP_FILE)
+    print("Processing:", tmpfile.name)
 
-    with open(TMP_FILE, 'r') as json_file:
+    # We have to work with a batch writer, otherwise this takes far too long
+    # to insert all items.
+    with open(tmpfile.name, 'r') as json_file, table.batch_writer() as batch:
         data = json.load(json_file)
 
         for entry in data:
-            # Dict comprehension to pull specific items out of the data based
-            # on their source key.
+            # Dict comprehension to pull specific items out of the data
+            # based on their source key.
             item = {
                 key: value
                 for (key, value)
@@ -50,9 +55,19 @@ def handler(event, context):
                 if key in SOURCE_KEYS
             }
 
-            print("Inserting item into DynamoDB: ", item)
-
             # put_item returns a response here, but we ignore it.
-            table.put_item(
+            batch.put_item(
                 Item=item,
             )
+
+    print("File processed")
+
+    # Attempt to unlink the tmpfile, but it's no disaster if it fails. The
+    # Lambda container will be recycled at some point, destroying it anyway.
+    try:
+        print("Removing tempfile")
+        os.unlink(tmpfile.name)
+    except Exception:
+        pass
+
+    print("All done")
