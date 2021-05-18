@@ -5,3 +5,7 @@ output lambda_role {
 output s3_bucket {
   value = aws_s3_bucket.data_source.bucket
 }
+
+output s3_website_url {
+  value = "https://${aws_s3_bucket.website.website_endpoint}"
+}
