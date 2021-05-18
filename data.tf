@@ -10,9 +10,10 @@ data aws_caller_identity current {
 
 # Prepare a zip file for deployment to AWS Lambda
 data archive_file updater {
-  type        = "zip"
-  source_file = "${path.module}/lambda/updater.py"
-  output_path = "${path.module}/lambda/updater.zip"
+  type             = "zip"
+  source_file      = "${path.module}/lambda/updater.py"
+  output_file_mode = "0755"
+  output_path      = "${path.module}/lambda/updater.zip"
 }
 
 # Assume role policy for Lambda

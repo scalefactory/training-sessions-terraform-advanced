@@ -21,6 +21,12 @@ provider aws {
   # safe to stay here.
   profile                 = "tf_adv_training"
   shared_credentials_file = "credentials"
+
+  default_tags {
+    tags = {
+      Managed_by = "terraform"
+    }
+  }
 }
 
 provider aws {
@@ -30,6 +36,12 @@ provider aws {
   assume_role {
     role_arn = "aws:arn:iam::%%ACCOUNT_ID%%:role/TfAdvLambdaAdmin"
   }
+
+  default_tags {
+    tags = {
+      Managed_by = "terraform"
+    }
+  }
 }
 
 provider aws {
@@ -38,5 +50,11 @@ provider aws {
 
   assume_role {
     role_arn = "aws:arn:iam::%%ACCOUNT_ID%%:role/TfAdvReadOnly"
+  }
+
+  default_tags {
+    tags = {
+      Managed_by = "terraform"
+    }
   }
 }
