@@ -1,6 +1,10 @@
 ###########################
 resource aws_s3_bucket data_source {
   bucket = "${var.name}-data-source-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+
+  # Must force destroy since buckets will have objects after the training
+  # session.
+  force_destroy = true
 }
 
 resource aws_s3_bucket_notification bucket_notification {
