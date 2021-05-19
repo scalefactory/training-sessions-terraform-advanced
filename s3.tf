@@ -31,6 +31,7 @@ resource aws_s3_bucket_notification bucket_notification {
   # notification.
   depends_on = [
     aws_lambda_permission.allow_bucket,
+    aws_s3_bucket_public_access_block.block,
   ]
 }
 
