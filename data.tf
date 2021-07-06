@@ -1,15 +1,15 @@
 # Get our current region
-data aws_region current {
+data "aws_region" "current" {
   provider = aws.read_only
 }
 
 # Get our caller identity
-data aws_caller_identity current {
+data "aws_caller_identity" "current" {
   provider = aws.read_only
 }
 
 # Prepare a zip file for deployment to AWS Lambda
-data archive_file updater {
+data "archive_file" "updater" {
   type             = "zip"
   source_file      = "${path.module}/lambda/updater.py"
   output_file_mode = "0755"
@@ -17,7 +17,7 @@ data archive_file updater {
 }
 
 # Assume role policy for Lambda
-data aws_iam_policy_document lambda_assume_role_policy {
+data "aws_iam_policy_document" "lambda_assume_role_policy" {
   statement {
     effect = "Allow"
 
@@ -36,7 +36,7 @@ data aws_iam_policy_document lambda_assume_role_policy {
 }
 
 # Policy allowing access to DynamoDB for Lambda
-data aws_iam_policy_document dynamodb {
+data "aws_iam_policy_document" "dynamodb" {
   statement {
     effect = "Allow"
 
@@ -58,7 +58,7 @@ data aws_iam_policy_document dynamodb {
 }
 
 # Policy allowing access to S3
-data aws_iam_policy_document s3 {
+data "aws_iam_policy_document" "s3" {
   statement {
     effect = "Allow"
 
