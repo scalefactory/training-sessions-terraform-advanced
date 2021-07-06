@@ -1,5 +1,5 @@
 ###########################
-resource aws_s3_bucket data_source {
+resource "aws_s3_bucket" "data_source" {
   bucket = "${var.name}-data-source-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
 
   server_side_encryption_configuration {
@@ -15,7 +15,7 @@ resource aws_s3_bucket data_source {
   force_destroy = true
 }
 
-resource aws_s3_bucket_notification bucket_notification {
+resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = aws_s3_bucket.data_source.id
 
   lambda_function {
@@ -35,7 +35,7 @@ resource aws_s3_bucket_notification bucket_notification {
   ]
 }
 
-resource aws_s3_bucket_public_access_block block {
+resource "aws_s3_bucket_public_access_block" "block" {
   bucket                  = aws_s3_bucket.data_source.id
   block_public_acls       = true
   block_public_policy     = true

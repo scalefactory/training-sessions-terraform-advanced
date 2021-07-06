@@ -1,4 +1,4 @@
-resource aws_s3_bucket website {
+resource "aws_s3_bucket" "website" {
   bucket = "${var.name}-website-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
   acl    = "public-read"
 
@@ -19,7 +19,7 @@ resource aws_s3_bucket website {
   force_destroy = true
 }
 
-resource aws_s3_bucket_object index {
+resource "aws_s3_bucket_object" "index" {
   bucket           = aws_s3_bucket.website.bucket
   acl              = "public-read"
   key              = "index.html"
