@@ -13,8 +13,11 @@
 #
 # sed -i 's/%%ACCOUNT_ID%%/123456789012/g' providers.tf
 #
+# For Mac users
+# sed -i .bak 's/%%ACCOUNT_ID%%/123456789012/g' providers.tf
+#
 # Where 123456789012 is your real account ID.
-provider aws {
+provider "aws" {
   region = "eu-west-1"
 
   # This profile configuration will be overridden if using aws-vault, so it's
@@ -29,12 +32,14 @@ provider aws {
   }
 }
 
-provider aws {
-  alias  = "lambda_admin"
-  region = "eu-west-1"
+provider "aws" {
+  alias                   = "lambda_admin"
+  region                  = "eu-west-1"
+  profile                 = "tf_adv_training"
+  shared_credentials_file = "credentials"
 
   assume_role {
-    role_arn = "aws:arn:iam::%%ACCOUNT_ID%%:role/TfAdvLambdaAdmin"
+    role_arn = "arn:aws:iam::%%ACCOUNT_ID%%:role/TfAdvLambdaAdmin"
   }
 
   default_tags {
@@ -44,12 +49,14 @@ provider aws {
   }
 }
 
-provider aws {
-  alias  = "read_only"
-  region = "eu-west-1"
+provider "aws" {
+  alias                   = "read_only"
+  region                  = "eu-west-1"
+  profile                 = "tf_adv_training"
+  shared_credentials_file = "credentials"
 
   assume_role {
-    role_arn = "aws:arn:iam::%%ACCOUNT_ID%%:role/TfAdvReadOnly"
+    role_arn = "arn:aws:iam::%%ACCOUNT_ID%%:role/TfAdvReadOnly"
   }
 
   default_tags {
