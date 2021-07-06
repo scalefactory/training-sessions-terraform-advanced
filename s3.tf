@@ -1,6 +1,6 @@
 ###########################
 resource "aws_s3_bucket" "data_source" {
-  bucket = "${var.name}-data-source-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+  bucket = "data-source-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
 
   server_side_encryption_configuration {
     rule {
