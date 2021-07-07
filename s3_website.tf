@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "website" {
   bucket = "website-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
   acl    = "public-read"
-}
+
 
   website {
     index_document = "index.html"
