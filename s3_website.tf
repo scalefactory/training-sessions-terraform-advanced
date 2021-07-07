@@ -1,5 +1,5 @@
-resource aws_s3_bucket website {
-  bucket = "${var.name}-website-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
+resource "aws_s3_bucket" "website" {
+  bucket = "website-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
   acl    = "public-read"
 
   server_side_encryption_configuration {
