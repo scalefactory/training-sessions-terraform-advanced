@@ -1,5 +1,5 @@
 # Our lambda function
-resource aws_lambda_function updater {
+resource "aws_lambda_function" "updater" {
   provider = aws.lambda_admin
 
   filename         = data.archive_file.updater.output_path
@@ -20,7 +20,7 @@ resource aws_lambda_function updater {
 }
 
 # Allow lambda call from S3 bucket
-resource aws_lambda_permission allow_bucket {
+resource "aws_lambda_permission" "allow_bucket" {
   provider = aws.lambda_admin
 
   action        = "lambda:InvokeFunction"
