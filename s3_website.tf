@@ -17,7 +17,7 @@ resource "aws_s3_bucket_object" "index" {
   acl              = "public-read"
   key              = "index.html"
   content          = local.website_content
+  etag             = md5(local.website_content)
   content_language = "en-GB"
   content_type     = "text/html"
-  etag             = md5(local.website_content)
 }
