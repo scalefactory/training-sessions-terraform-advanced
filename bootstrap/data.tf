@@ -1,15 +1,16 @@
 #
 data aws_caller_identity current {}
 data aws_region current {}
+data aws_partition current {}
 
 # Managed policy ARNs
 data aws_arn read_only_access_policy {
-  arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+  arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/ReadOnlyAccess"
 }
 
 # Account ARN
 data aws_arn current_account {
-  arn = "arn:aws:iam::${local.account_id}:root"
+  arn = "arn:${data.aws_partition.current.partition}:iam::${local.account_id}:root"
 }
 
 # Generic role assumption policy
@@ -119,12 +120,12 @@ data aws_iam_policy_document lambda_admin {
     ]
 
     resources = [
-      "arn:aws:lambda:${local.region}:${local.account_id}:codesigningconfig:*",
-      "arn:aws:lambda:${local.region}:${local.account_id}:event-source-mapping:*",
-      "arn:aws:lambda:${local.region}:${local.account_id}:function:*",
-      "arn:aws:lambda:${local.region}:${local.account_id}:function:*:*",
-      "arn:aws:lambda:${local.region}:${local.account_id}:layer:*",
-      "arn:aws:lambda:${local.region}:${local.account_id}:layer:*:*",
+      "arn:${data.aws_partition.current.partition}:lambda:${local.region}:${local.account_id}:codesigningconfig:*",
+      "arn:${data.aws_partition.current.partition}:lambda:${local.region}:${local.account_id}:event-source-mapping:*",
+      "arn:${data.aws_partition.current.partition}:lambda:${local.region}:${local.account_id}:function:*",
+      "arn:${data.aws_partition.current.partition}:lambda:${local.region}:${local.account_id}:function:*:*",
+      "arn:${data.aws_partition.current.partition}:lambda:${local.region}:${local.account_id}:layer:*",
+      "arn:${data.aws_partition.current.partition}:lambda:${local.region}:${local.account_id}:layer:*:*",
     ]
   }
 }

@@ -8,7 +8,7 @@ resource "aws_iam_role" "lambda_role" {
 # Attach basic AWS managed policy to lambda role
 resource "aws_iam_role_policy_attachment" "AWSLambdaBasicExecution" {
   role       = aws_iam_role.lambda_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 # Attach DynamoDB policy to lambda role
