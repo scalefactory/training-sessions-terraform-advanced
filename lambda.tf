@@ -29,3 +29,11 @@ resource aws_lambda_permission allow_bucket {
   source_arn    = aws_s3_bucket.data_source.arn
   statement_id  = "AllowExecutionFromS3Bucket"
 }
+
+# Prepare a zip file for deployment to AWS Lambda
+data archive_file updater {
+  type             = "zip"
+  source_file      = "${path.module}/lambda/updater.py"
+  output_file_mode = "0755"
+  output_path      = "${path.module}/lambda/updater.zip"
+}
