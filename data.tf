@@ -76,3 +76,7 @@ data "aws_iam_policy_document" "s3" {
     ]
   }
 }
+
+# Get our AWS partition - eg "aws" (default), or "aws-us-gov" (US GovCloud regions)"
+data aws_partition current {
+}

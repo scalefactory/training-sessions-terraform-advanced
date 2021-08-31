@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Name given to the Lambda"
+  description = "Name used for Lambda and for DynamoDB table"
   type        = string
   default     = "user"
 }
