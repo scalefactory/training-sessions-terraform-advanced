@@ -16,7 +16,15 @@ resource "aws_s3_bucket_object" "index" {
   bucket           = aws_s3_bucket.website.bucket
   acl              = "public-read"
   key              = "index.html"
-  content          = local.website_content
+  content          = <<EOT
+        <html><head>
+        <title>Hello World</title>
+        </head>
+        <body>
+        <h1>Hello World</h1>
+        </body>
+        </html>
+  EOT
   etag             = md5(local.website_content)
   content_language = "en-GB"
   content_type     = "text/html"
