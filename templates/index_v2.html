@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Hello World 2</title>
+        <style>
+            pre.code  {
+                display:     block;
+                font-family: monospace;
+                white-space: pre;
+            }
+        </style>
+    </head>
+    <body>
+        <pre class="code">
+AWS Partition: ${aws_partition}
+DynamoDB Table: ${dynamodb_table}
+Lambda Function Name: ${lambda_function_name}
+Lambda Source Code Hash: ${lambda_source_code_hash}
+Private S3 Bucket: ${private_bucket}
+        </pre>
+    </body>
+</html>
