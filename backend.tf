@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.3.0"
+  required_version = ">= 1.3.0"
 
   required_providers {
     archive = {
@@ -11,7 +11,7 @@ terraform {
       source = "hashicorp/aws"
       # Ensure this is valid for modules added during the session. 
       # i.e. cloudposse/cloudfront-s3-cdn/aws
-      version = "~> 3.64.0"
+      version = "~> 4.18"
     }
 
     github = {

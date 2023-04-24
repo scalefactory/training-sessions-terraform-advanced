@@ -16,8 +16,7 @@
 provider "aws" {
   region = "eu-west-1"
 
-  # This profile configuration will be overridden if using aws-vault, so it's
-  # safe to stay here.
+  # This profile configuration will need to be commented out if using aws-vault.
   profile                 = "advanced-tf-training"
 
   default_tags {
@@ -46,6 +45,7 @@ provider "aws" {
 provider "aws" {
   alias                   = "read_only"
   region                  = "eu-west-1"
+  # This profile configuration will need to be commented out if using aws-vault.
   profile                 = "advanced-tf-training"
 
   assume_role {
