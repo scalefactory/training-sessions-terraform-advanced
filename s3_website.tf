@@ -27,13 +27,30 @@ resource "aws_s3_bucket_public_access_block" "website" {
   restrict_public_buckets = false
 }
 
-resource "aws_s3_bucket_acl" "website" {
+
+resource "aws_s3_bucket_policy" "allow_s3_public_read" {
+  bucket = aws_s3_bucket.website.id
+  policy = data.aws_iam_policy_document.allow_s3_public_read.json
+
   depends_on = [
+    aws_s3_bucket.website,
     aws_s3_bucket_ownership_controls.website,
     aws_s3_bucket_public_access_block.website,
   ]
-  bucket = aws_s3_bucket.website.id
-  acl    = "public-read"
+
+}
+
+data "aws_iam_policy_document" "allow_s3_public_read" {
+  statement {
+    sid       = "PublicReadGetObject"
+    effect    = "Allow"
+    resources = ["${aws_s3_bucket.website.arn}/*"]
+    actions   = ["s3:GetObject"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
 }
 
 resource "aws_s3_bucket_object" "index" {
