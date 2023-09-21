@@ -1,20 +1,28 @@
+locals {
+  website_content = <<EOT
+        <html><head>
+        <title>Hello World</title>
+        </head>
+        <body>
+        <h1>Hello World</h1>
+        </body>
+        </html>
+  EOT
+}
+
 resource "aws_s3_bucket" "website" {
   bucket = "website-${data.aws_region.current.name}-${data.aws_caller_identity.current.account_id}"
-
-  website {
-    index_document = "index.html"
-  }
 
   # Must force destroy since buckets will have objects after the training
   # session.
   force_destroy = true
 }
 
-resource "aws_s3_bucket_ownership_controls" "website" {
+resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.website.id
 
-  rule {
-    object_ownership = "BucketOwnerPreferred"
+  index_document {
+    suffix = "index.html"
   }
 }
 
@@ -32,8 +40,6 @@ resource "aws_s3_bucket_policy" "allow_s3_public_read" {
   policy = data.aws_iam_policy_document.allow_s3_public_read.json
 
   depends_on = [
-    aws_s3_bucket.website,
-    aws_s3_bucket_ownership_controls.website,
     aws_s3_bucket_public_access_block.website,
   ]
 
@@ -52,9 +58,8 @@ data "aws_iam_policy_document" "allow_s3_public_read" {
   }
 }
 
-resource "aws_s3_bucket_object" "index" {
+resource "aws_s3_object" "index" {
   bucket           = aws_s3_bucket.website.bucket
-  acl              = "public-read"
   key              = "index.html"
   content          = local.website_content
   etag             = md5(local.website_content)
@@ -62,14 +67,10 @@ resource "aws_s3_bucket_object" "index" {
   content_type     = "text/html"
 }
 
-locals {
-  website_content = <<EOT
-        <html><head>
-        <title>Hello World</title>
-        </head>
-        <body>
-        <h1>Hello World</h1>
-        </body>
-        </html>
-  EOT
+# Enables versioning for all objects in bucket
+resource "aws_s3_bucket_versioning" "website" {
+  bucket = aws_s3_bucket.website.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }

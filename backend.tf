@@ -11,12 +11,7 @@ terraform {
       source = "hashicorp/aws"
       # Ensure this is valid for modules added during the session. 
       # i.e. cloudposse/cloudfront-s3-cdn/aws
-      version = "~> 4.18"
-    }
-
-    github = {
-      source  = "integrations/github"
-      version = "~> 4.14.0"
+      version = "~> 5.0.0"
     }
   }
 }
