@@ -7,7 +7,7 @@
 provider "aws" {
   region = "eu-west-1"
 
-  # This profile configuration will need to be commented out if using aws-vault.
+  # This profile configuration will need to be commented out if using aws-vault or the code-server IDE.
   profile = "advanced-tf-training"
 
   default_tags {
